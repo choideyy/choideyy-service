@@ -1,0 +1,26 @@
+meta {
+  name: Bot protection triggered
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/contact
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Origin: {{origin}}
+}
+
+body:json {
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "subject": "General enquiry",
+    "message": "Hello, I would like more information about Choideyy.",
+    "website": "http://spam-bot.example"
+  }
+}

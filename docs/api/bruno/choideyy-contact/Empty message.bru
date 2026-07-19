@@ -1,0 +1,25 @@
+meta {
+  name: Empty message
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/contact
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Origin: {{origin}}
+}
+
+body:json {
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "subject": "General enquiry",
+    "message": ""
+  }
+}

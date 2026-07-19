@@ -1,0 +1,133 @@
+### Choideyy Contact API — VS Code REST Client
+### Extension: humao.rest-client
+### Set @baseUrl and @origin before running.
+
+@baseUrl = http://localhost:3000
+@origin = http://localhost:5173
+
+### Successful request
+# @name success
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "General enquiry",
+  "message": "Hello, I would like more information about Choideyy.",
+  "formStartedAt": 1721400000000,
+  "website": ""
+}
+
+### Missing required field (name)
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "email": "john@example.com",
+  "subject": "General enquiry",
+  "message": "Hello, I would like more information about Choideyy."
+}
+
+### Invalid email
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "John Doe",
+  "email": "not-an-email",
+  "subject": "General enquiry",
+  "message": "Hello, I would like more information about Choideyy."
+}
+
+### Empty message
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "General enquiry",
+  "message": ""
+}
+
+### Message exceeding maximum length (5001 chars)
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "General enquiry",
+  "message": "{{$repeat 5001 'M'}}"
+}
+
+### Invalid Content-Type
+POST {{baseUrl}}/api/contact
+Content-Type: text/plain
+Origin: {{origin}}
+
+name=John&email=john@example.com
+
+### Bot protection triggered (honeypot filled)
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "General enquiry",
+  "message": "Hello, I would like more information about Choideyy.",
+  "website": "http://spam-bot.example"
+}
+
+### Bot protection triggered (submission too fast)
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "General enquiry",
+  "message": "Hello, I would like more information about Choideyy.",
+  "formStartedAt": 9999999999999
+}
+
+### Rate limit exceeded
+# Run this request 6+ times quickly from the same IP (limit is 5 / 15 min).
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "Rate limit probe",
+  "message": "Hello, this request is used to probe rate limiting behavior."
+}
+
+### CORS preflight
+OPTIONS {{baseUrl}}/api/contact
+Origin: {{origin}}
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type
+
+### OpenAPI JSON
+GET {{baseUrl}}/api/openapi.json
+
+### Swagger UI
+GET {{baseUrl}}/api/docs
+
+### Internal server error (mocked)
+# This cannot be triggered via a normal client request without breaking SMTP.
+# Covered by automated tests that mock sendContactEmail to throw.
+# Expected response shape:
+# HTTP/1.1 500
+# { "success": false, "error": "Internal server error" }

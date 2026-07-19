@@ -1,0 +1,29 @@
+meta {
+  name: Message exceeding maximum length
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/contact
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Origin: {{origin}}
+}
+
+body:json {
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "subject": "General enquiry",
+    "message": "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+  }
+}
+
+docs {
+  Replace message with 5001 characters of "M" before sending.
+}

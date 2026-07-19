@@ -1,0 +1,29 @@
+meta {
+  name: Rate limit exceeded
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/contact
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Origin: {{origin}}
+}
+
+body:json {
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "subject": "Rate limit probe",
+    "message": "Hello, this request is used to probe rate limiting behavior."
+  }
+}
+
+docs {
+  Send 6+ times quickly from the same IP to observe HTTP 429.
+}

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, test, OpenAPI, build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Unit & integration tests (coverage)
+        run: npm run test:coverage
+        env:
+          # Tests mock SMTP — credentials must not be required.
+          CI: true
+
+      - name: Generate OpenAPI document
+        run: npm run openapi:generate
+
+      - name: Validate OpenAPI specification
+        run: npm run openapi:validate
+
+      - name: Build application
+        run: npm run build
+        env:
+          # Build does not send mail; keep secrets out of CI.
+          SMTP_HOST: smtp.example.com
+          SMTP_PORT: "587"
+          SMTP_USER: ci@example.com
+          SMTP_PASS: ci-not-a-real-secret
+          CONTACT_RECEIVER_EMAIL: inbox@example.com
+          FRONTEND_ORIGIN: https://example.com
