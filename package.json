@@ -1,8 +1,8 @@
 {
   "name": "choideyy-service",
-  "version": "1.0.0",
+  "version": "1.0.0-SNAPSHOT",
   "private": true,
-  "description": "Contact Us API service for Choideyy",
+  "description": "API service for Choideyy",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
