@@ -69,6 +69,7 @@ export const openApiDocument = {
                   value: {
                     name: "John Doe",
                     email: "john@example.com",
+                    phone: "+1 555 0100",
                     subject: "General enquiry",
                     message: "Hello, I would like more information about Choideyy.",
                     formStartedAt: 1721400000000,
@@ -299,6 +300,13 @@ export const openApiDocument = {
             maxLength: 254,
             description: "Sender email (used as Reply-To)",
             examples: ["john@example.com"],
+          },
+          phone: {
+            type: "string",
+            maxLength: 30,
+            description:
+              "Optional phone number. Digits, spaces, and common punctuation (+, -, (), .) allowed.",
+            examples: ["+1 555 0100"],
           },
           subject: {
             type: "string",

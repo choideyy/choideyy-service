@@ -15,6 +15,9 @@ const emailSchema = z
   .email("Invalid email format")
   .max(254, "Email must be at most 254 characters");
 
+/** Digits, spaces, and common phone punctuation; optional leading +. */
+const phonePattern = /^\+?[0-9()\-\s.]{7,30}$/;
+
 export const contactFormSchema = z
   .object({
     name: z
@@ -23,6 +26,14 @@ export const contactFormSchema = z
       .min(2, "Name must be at least 2 characters")
       .max(100, "Name must be at most 100 characters"),
     email: emailSchema,
+    phone: z
+      .string()
+      .trim()
+      .max(30, "Phone must be at most 30 characters")
+      .refine((value) => value === "" || phonePattern.test(value), {
+        message: "Invalid phone number format",
+      })
+      .optional(),
     subject: z
       .string({ required_error: "Subject is required" })
       .trim()
@@ -52,6 +63,7 @@ export type ContactFormInput = z.infer<typeof contactFormSchema>;
 export type ContactFormData = {
   name: string;
   email: string;
+  phone?: string;
   subject: string;
   message: string;
 };
@@ -134,6 +146,9 @@ export function validateContactPayload(payload: unknown): ValidationResult {
     data: {
       name: sanitizeText(data.name),
       email: sanitizeText(data.email).toLowerCase(),
+      ...(data.phone && data.phone.trim()
+        ? { phone: sanitizeText(data.phone) }
+        : {}),
       subject: sanitizeEmailSubject(sanitizeText(data.subject)),
       message: sanitizeText(data.message),
     },

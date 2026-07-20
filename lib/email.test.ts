@@ -73,6 +73,20 @@ describe("sendContactEmail", () => {
     expect(mail.html).toContain("John Doe");
   });
 
+  it("includes phone in the email body when provided", async () => {
+    await sendContactEmail({ ...baseData, phone: "+1 555 0100" }, baseMeta);
+    const mail = sendMail.mock.calls[0]?.[0] as { text: string; html: string };
+    expect(mail.text).toContain("Phone: +1 555 0100");
+    expect(mail.html).toContain("+1 555 0100");
+  });
+
+  it("shows a placeholder when phone is omitted", async () => {
+    await sendContactEmail(baseData, baseMeta);
+    const mail = sendMail.mock.calls[0]?.[0] as { text: string; html: string };
+    expect(mail.text).toContain("Phone: —");
+    expect(mail.html).toContain("—");
+  });
+
   it("uses secure transport for port 465", async () => {
     process.env.SMTP_PORT = "465";
     await sendContactEmail(baseData, baseMeta);

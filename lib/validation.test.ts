@@ -41,6 +41,35 @@ describe("validateContactPayload", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts an optional phone number", () => {
+    const result = validateContactPayload(validPayload({ phone: "+1 (555) 010-0199" }));
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.phone).toBe("+1 (555) 010-0199");
+    }
+  });
+
+  it("omits empty phone from validated data", () => {
+    const result = validateContactPayload(validPayload({ phone: "   " }));
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.phone).toBeUndefined();
+    }
+  });
+
+  it("rejects invalid phone format", () => {
+    const result = validateContactPayload(validPayload({ phone: "not-a-phone" }));
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.details.some((d) => d.path === "phone")).toBe(true);
+    }
+  });
+
+  it("rejects phone longer than 30 characters", () => {
+    const result = validateContactPayload(validPayload({ phone: "1".repeat(31) }));
+    expect(result.success).toBe(false);
+  });
+
   it("normalizes email to lowercase", () => {
     const result = validateContactPayload(validPayload({ email: "John@Example.COM" }));
     expect(result.success).toBe(true);

@@ -74,6 +74,7 @@ function buildTextBody(data: ContactFormData, meta: ContactEmailMeta): string {
     "",
     `Name: ${data.name}`,
     `Email: ${data.email}`,
+    `Phone: ${data.phone ?? "—"}`,
     `Subject: ${data.subject}`,
     `Timestamp: ${meta.timestamp}`,
     `Client IP: ${meta.clientIp}`,
@@ -86,14 +87,16 @@ function buildTextBody(data: ContactFormData, meta: ContactEmailMeta): string {
 }
 
 function buildHtmlBody(data: ContactFormData, meta: ContactEmailMeta): string {
+  const phoneDisplay = data.phone ? escapeHtml(data.phone) : "—";
   return `
 <!DOCTYPE html>
 <html>
 <body style="font-family: sans-serif; line-height: 1.5; color: #111;">
-  <h2>New Contact Us submission</h2>
+  <h2>New submission</h2>
   <table style="border-collapse: collapse;">
     <tr><td style="padding: 4px 12px 4px 0;"><strong>Name</strong></td><td>${escapeHtml(data.name)}</td></tr>
     <tr><td style="padding: 4px 12px 4px 0;"><strong>Email</strong></td><td>${escapeHtml(data.email)}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0;"><strong>Phone</strong></td><td>${phoneDisplay}</td></tr>
     <tr><td style="padding: 4px 12px 4px 0;"><strong>Subject</strong></td><td>${escapeHtml(data.subject)}</td></tr>
     <tr><td style="padding: 4px 12px 4px 0;"><strong>Timestamp</strong></td><td>${escapeHtml(meta.timestamp)}</td></tr>
     <tr><td style="padding: 4px 12px 4px 0;"><strong>Client IP</strong></td><td>${escapeHtml(meta.clientIp)}</td></tr>

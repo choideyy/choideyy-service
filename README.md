@@ -124,6 +124,7 @@ curl -i -X POST http://localhost:3000/api/contact \
   -d '{
     "name": "John Doe",
     "email": "john@example.com",
+    "phone": "+1 555 0100",
     "subject": "General enquiry",
     "message": "Hello, I would like more information about Choideyy.",
     "website": ""
@@ -138,6 +139,7 @@ const formStartedAt = Date.now();
 async function submitContact(form: {
   name: string;
   email: string;
+  phone?: string;
   subject: string;
   message: string;
 }) {
@@ -201,6 +203,7 @@ async function submitContact(form: {
 | --------------------- | -------------------------------------------------- |
 | `name`                | Required, 2–100 characters                         |
 | `email`               | Required, valid email                              |
+| `phone`               | Optional; max 30 chars; digits and `+ - ( ) .`     |
 | `subject`             | Required, max 200 characters                       |
 | `message`             | Required, 10–5000 characters                       |
 | `formStartedAt`       | Optional; when present, min 3s elapsed, max 1h age |

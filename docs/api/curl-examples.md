@@ -11,6 +11,7 @@ curl -i -X POST http://localhost:3000/api/contact \
   -d '{
     "name": "John Doe",
     "email": "john@example.com",
+    "phone": "+1 555 0100",
     "subject": "General enquiry",
     "message": "Hello, I would like more information about Choideyy.",
     "formStartedAt": 1721400000000,
