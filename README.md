@@ -140,7 +140,7 @@ async function submitContact(form: {
   name: string;
   email: string;
   phone?: string;
-  subject: string;
+  subject?: string;
   message: string;
 }) {
   const res = await fetch(`${import.meta.env.VITE_CONTACT_API_URL}/api/contact`, {
@@ -204,7 +204,7 @@ async function submitContact(form: {
 | `name`                | Required, 2–100 characters                         |
 | `email`               | Required, valid email                              |
 | `phone`               | Optional; max 30 chars; digits and `+ - ( ) .`     |
-| `subject`             | Required, max 200 characters                       |
+| `subject`             | Optional, max 200 characters; default: `Contact form submission` |
 | `message`             | Required, 10–5000 characters                       |
 | `formStartedAt`       | Optional; when present, min 3s elapsed, max 1h age |
 | `website` / `company` | Honeypots — must be empty / omitted                |

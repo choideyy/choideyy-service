@@ -381,7 +381,6 @@
         "required": [
           "name",
           "email",
-          "subject",
           "message"
         ],
         "properties": {
@@ -413,9 +412,8 @@
           },
           "subject": {
             "type": "string",
-            "minLength": 1,
             "maxLength": 200,
-            "description": "Message subject",
+            "description": "Optional message subject. Defaults to \"Contact form submission\" when omitted or blank.",
             "examples": [
               "General enquiry"
             ]

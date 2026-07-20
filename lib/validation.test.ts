@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { MAX_SUBMISSION_AGE_MS, MIN_SUBMISSION_MS, validateContactPayload } from "@/lib/validation";
+import {
+  DEFAULT_CONTACT_SUBJECT,
+  MAX_SUBMISSION_AGE_MS,
+  MIN_SUBMISSION_MS,
+  validateContactPayload,
+} from "@/lib/validation";
 
 function validPayload(overrides: Record<string, unknown> = {}) {
   return {
@@ -108,9 +113,20 @@ describe("validateContactPayload", () => {
     }
   });
 
-  it("rejects empty subject", () => {
-    const result = validateContactPayload(validPayload({ subject: "   " }));
-    expect(result.success).toBe(false);
+  it("defaults subject when omitted or blank", () => {
+    const withoutSubject = validPayload();
+    delete (withoutSubject as { subject?: string }).subject;
+    const omitted = validateContactPayload(withoutSubject);
+    expect(omitted.success).toBe(true);
+    if (omitted.success) {
+      expect(omitted.data.subject).toBe(DEFAULT_CONTACT_SUBJECT);
+    }
+
+    const blank = validateContactPayload(validPayload({ subject: "   " }));
+    expect(blank.success).toBe(true);
+    if (blank.success) {
+      expect(blank.data.subject).toBe(DEFAULT_CONTACT_SUBJECT);
+    }
   });
 
   it("rejects subject longer than 200 characters", () => {

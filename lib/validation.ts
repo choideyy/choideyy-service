@@ -15,6 +15,9 @@ const emailSchema = z
   .email("Invalid email format")
   .max(254, "Email must be at most 254 characters");
 
+/** Default email subject when the client omits or leaves subject blank. */
+export const DEFAULT_CONTACT_SUBJECT = "Contact form submission";
+
 /** Digits, spaces, and common phone punctuation; optional leading +. */
 const phonePattern = /^\+?[0-9()\-\s.]{7,30}$/;
 
@@ -35,10 +38,10 @@ export const contactFormSchema = z
       })
       .optional(),
     subject: z
-      .string({ required_error: "Subject is required" })
+      .string()
       .trim()
-      .min(1, "Subject is required")
-      .max(200, "Subject must be at most 200 characters"),
+      .max(200, "Subject must be at most 200 characters")
+      .optional(),
     message: z
       .string({ required_error: "Message is required" })
       .trim()
@@ -141,6 +144,8 @@ export function validateContactPayload(payload: unknown): ValidationResult {
     }
   }
 
+  const subjectRaw = data.subject?.trim() ? data.subject : DEFAULT_CONTACT_SUBJECT;
+
   return {
     success: true,
     data: {
@@ -149,7 +154,7 @@ export function validateContactPayload(payload: unknown): ValidationResult {
       ...(data.phone && data.phone.trim()
         ? { phone: sanitizeText(data.phone) }
         : {}),
-      subject: sanitizeEmailSubject(sanitizeText(data.subject)),
+      subject: sanitizeEmailSubject(sanitizeText(subjectRaw)),
       message: sanitizeText(data.message),
     },
   };

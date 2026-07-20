@@ -285,7 +285,7 @@ export const openApiDocument = {
       ContactRequest: {
         type: "object",
         additionalProperties: false,
-        required: ["name", "email", "subject", "message"],
+        required: ["name", "email", "message"],
         properties: {
           name: {
             type: "string",
@@ -310,9 +310,9 @@ export const openApiDocument = {
           },
           subject: {
             type: "string",
-            minLength: 1,
             maxLength: 200,
-            description: "Message subject",
+            description:
+              'Optional message subject. Defaults to "Contact form submission" when omitted or blank.',
             examples: ["General enquiry"],
           },
           message: {
