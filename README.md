@@ -268,7 +268,7 @@ The pipeline **fails** if lint, typecheck, tests, coverage thresholds, OpenAPI v
 | `403 Origin not allowed`     | `FRONTEND_ORIGIN` mismatch | Use exact origin including scheme/port                                         |
 | `415 Unsupported Media Type` | Wrong Content-Type         | Send `application/json`                                                        |
 | `429 Too many requests`      | IP exceeded 5/15m          | Wait for `Retry-After` or reset limiter in dev                                 |
-| `500 Internal server error`  | SMTP misconfiguration      | Check `SMTP_*` and `CONTACT_RECEIVER_EMAIL` in server logs (not response body) |
+| `500 Internal server error`  | SMTP misconfiguration      | Check server logs. For Gmail, use an [App Password](https://myaccount.google.com/apppasswords) as `SMTP_PASS` (not your normal Google password), then restart `npm run dev`. |
 | Emails not arriving          | Provider auth / spam       | Verify SMTP credentials; check spam folder                                     |
 | Swagger UI blank             | CDN blocked                | Ensure network access to `unpkg.com` for `/api/docs`                           |
 | `npm` peer dependency errors | Wrong `next` major         | Use Next.js 15 + React 19 as in `package.json`                                 |

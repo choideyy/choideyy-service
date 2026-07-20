@@ -113,4 +113,22 @@ describe("sendContactEmail", () => {
     expect(mail.to).toBe(process.env.CONTACT_RECEIVER_EMAIL);
     expect(mail.to).not.toBe(baseData.email);
   });
+
+  it("throws a clear error when Gmail rejects a normal password", async () => {
+    process.env.SMTP_HOST = "smtp.gmail.com";
+    sendMail.mockRejectedValueOnce(
+      new Error("Invalid login: 534-5.7.9 Application-specific password required"),
+    );
+    await expect(sendContactEmail(baseData, baseMeta)).rejects.toThrow(/App Password/);
+  });
+
+  it("strips spaces from SMTP_PASS (Gmail App Password format)", async () => {
+    process.env.SMTP_PASS = "abcd efgh ijkl mnop";
+    await sendContactEmail(baseData, baseMeta);
+    expect(createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        auth: expect.objectContaining({ pass: "abcdefghijklmnop" }),
+      }),
+    );
+  });
 });
